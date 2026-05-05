@@ -182,7 +182,8 @@ class _ClassicAnimSearchBarState extends State<ClassicAnimSearchBar>
     return AnimatedPositioned(
       duration: Duration(milliseconds: widget.animationDurationInMilli),
       top: 6.0,
-      right: 7.0,
+      right: widget.rtl ? null : 7.0,
+      left: widget.rtl ? 7.0 : null,
       curve: Curves.easeOut,
       child: AnimatedOpacity(
         opacity: _isExpanded ? 1.0 : 0.0,
@@ -219,14 +220,15 @@ class _ClassicAnimSearchBarState extends State<ClassicAnimSearchBar>
   Widget _buildTextField() {
     return AnimatedPositioned(
       duration: Duration(milliseconds: widget.animationDurationInMilli),
-      left: _isExpanded ? 40.0 : 20.0,
+      left: widget.rtl ? null : (_isExpanded ? 40.0 : 20.0),
+      right: widget.rtl ? (_isExpanded ? 40.0 : 20.0) : null,
       curve: Curves.easeOut,
       top: 11.0,
       child: AnimatedOpacity(
         opacity: _isExpanded ? 1.0 : 0.0,
         duration: Duration(milliseconds: 200),
         child: Container(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const EdgeInsetsDirectional.only(start: 10),
           alignment: Alignment.topCenter,
           width: widget.width / 1.7,
           child: TextField(

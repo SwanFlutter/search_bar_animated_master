@@ -13,7 +13,7 @@ class EnhancedAnimSearchBar extends StatefulWidget {
   /// - onSubmitted: Function(String) - Callback when search is submitted
   ///
   /// Optional parameters with enhanced features:
-  /// - gradientColors: List&lt;Color&gt; - Colors for gradient background
+  /// - gradientColors: List<Color> - Colors for gradient background
   /// - fadeAnimation: bool - Enable fade animation effects
   /// - glowEffect: bool - Enable glow effect around the search bar
   /// - borderGradient: bool - Enable gradient border
@@ -196,7 +196,7 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
       } else {
         _isExpanded = false;
         _expandController.reverse();
-        if (widget.fadeAnimation) _fadeController.reverse();
+        if (widget.fadeAnimation) _expandController.reverse();
         if (widget.autoFocus) _unfocusKeyboard();
       }
     });
@@ -330,7 +330,8 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
     return AnimatedPositioned(
       duration: Duration(milliseconds: widget.animationDurationInMilli),
       top: 6.0,
-      right: 7.0,
+      right: widget.rtl ? null : 7.0,
+      left: widget.rtl ? 7.0 : null,
       curve: Curves.easeOut,
       child: AnimatedOpacity(
         opacity: _isExpanded ? 1.0 : 0.0,
@@ -374,14 +375,15 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
   Widget _buildTextField() {
     return AnimatedPositioned(
       duration: Duration(milliseconds: widget.animationDurationInMilli),
-      left: _isExpanded ? 40.0 : 20.0,
+      left: widget.rtl ? null : (_isExpanded ? 40.0 : 20.0),
+      right: widget.rtl ? (_isExpanded ? 40.0 : 20.0) : null,
       curve: Curves.easeOut,
       top: 11.0,
       child: AnimatedOpacity(
         opacity: _isExpanded ? 1.0 : 0.0,
         duration: Duration(milliseconds: 200),
         child: Container(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const EdgeInsetsDirectional.only(start: 10),
           alignment: Alignment.topCenter,
           width: widget.width / 1.7,
           child: TextField(

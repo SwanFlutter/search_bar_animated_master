@@ -95,26 +95,30 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
             // Classic Search Bar with Hidden Background
             _buildSectionTitle('🔍 Classic Search Bar (No Background Circle)'),
             SizedBox(height: 10),
-            ClassicAnimSearchBar(
-              width: MediaQuery.of(context).size.width - 40,
-              textController: TextEditingController(),
-              animationDurationInMilli: 1500,
-              onSuffixTap: () {
-                setState(() {
-                  _searchResult = '';
-                });
-              },
-              onSubmitted: (value) {
-                setState(() {
-                  _searchResult = 'No background search: $value';
-                });
-              },
-              helpText: "Search without background circle...",
-              autoFocus: false,
-              color: Colors.grey[200],
-              textFieldColor: Colors.grey[100],
-              // Hide the background circle completely
-              hidePrefixIconBackground: true,
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: ClassicAnimSearchBar(
+                width: MediaQuery.of(context).size.width - 40,
+                textController: TextEditingController(),
+                rtl: true,
+                animationDurationInMilli: 1500,
+                onSuffixTap: () {
+                  setState(() {
+                    _searchResult = '';
+                  });
+                },
+                onSubmitted: (value) {
+                  setState(() {
+                    _searchResult = 'No background search: $value';
+                  });
+                },
+                helpText: "Search without background circle...",
+                autoFocus: false,
+                color: Colors.grey[200],
+                textFieldColor: Colors.grey[100],
+                // Hide the background circle completely
+                hidePrefixIconBackground: true,
+              ),
             ),
 
             SizedBox(height: 30),
