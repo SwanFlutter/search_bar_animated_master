@@ -34,6 +34,7 @@ class ClassicAnimSearchBar extends StatefulWidget {
   final Function(String) onSubmitted;
   final Color? prefixIconBackgroundColor;
   final bool hidePrefixIconBackground;
+  final Color? cursorColor;
 
   const ClassicAnimSearchBar({
     super.key,
@@ -57,6 +58,7 @@ class ClassicAnimSearchBar extends StatefulWidget {
     this.inputFormatters,
     this.prefixIconBackgroundColor,
     this.hidePrefixIconBackground = false,
+    this.cursorColor,
   });
 
   @override
@@ -251,7 +253,7 @@ class _ClassicAnimSearchBarState extends State<ClassicAnimSearchBar>
               _animationController.reverse();
             },
             style: widget.style ?? TextStyle(color: Colors.black),
-            cursorColor: Colors.black,
+            cursorColor: widget.cursorColor ?? Theme.of(context).textSelectionTheme.cursorColor ?? Theme.of(context).primaryColor,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(bottom: 5),
               isDense: true,
@@ -285,31 +287,36 @@ class _ClassicAnimSearchBarState extends State<ClassicAnimSearchBar>
       backgroundColor = _isExpanded ? widget.textFieldColor! : widget.color!;
     }
 
-    return Material(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(30.0),
-      child: InkWell(
+    return Positioned(
+      left: widget.rtl ? null : 0,
+      right: widget.rtl ? 0 : null,
+      top: 0,
+      child: Material(
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(30.0),
-        onTap: _toggleSearchBar,
-        child: Container(
-          width: 48.0,
-          height: 48.0,
-          alignment: Alignment.center, // Center the icon properly
-          child: widget.prefixIcon != null
-              ? _isExpanded
-                    ? Icon(
-                        Icons.arrow_back_ios,
-                        color: widget.textFieldIconColor,
-                        size: 20.0,
-                      )
-                    : widget.prefixIcon!
-              : Icon(
-                  _isExpanded ? Icons.arrow_back_ios : Icons.search,
-                  color: _isExpanded
-                      ? widget.textFieldIconColor
-                      : widget.searchIconColor,
-                  size: 20.0,
-                ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(30.0),
+          onTap: _toggleSearchBar,
+          child: Container(
+            width: 48.0,
+            height: 48.0,
+            alignment: Alignment.center, // Center the icon properly
+            child: widget.prefixIcon != null
+                ? _isExpanded
+                      ? Icon(
+                          Icons.arrow_back_ios,
+                          color: widget.textFieldIconColor,
+                          size: 20.0,
+                        )
+                      : widget.prefixIcon!
+                : Icon(
+                    _isExpanded ? Icons.arrow_back_ios : Icons.search,
+                    color: _isExpanded
+                        ? widget.textFieldIconColor
+                        : widget.searchIconColor,
+                    size: 20.0,
+                  ),
+          ),
         ),
       ),
     );

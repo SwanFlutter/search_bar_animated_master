@@ -17,6 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        // Default cursor color in theme
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.red,
+        ),
       ),
       home: SearchBarDemo(),
     );
@@ -88,12 +92,14 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
               hidePrefixIconBackground: false, // Set to true to hide background
               prefixIconBackgroundColor:
                   Colors.blue[100], // Custom background color
+              // Custom cursor color
+              cursorColor: Colors.blue,
             ),
 
             SizedBox(height: 30),
 
-            // Classic Search Bar with Hidden Background
-            _buildSectionTitle('🔍 Classic Search Bar (No Background Circle)'),
+            // Classic Search Bar with Hidden Background & RTL
+            _buildSectionTitle('🔍 Classic Search Bar (RTL & Fixed Layout)'),
             SizedBox(height: 10),
             Directionality(
               textDirection: TextDirection.rtl,
@@ -112,12 +118,13 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
                     _searchResult = 'No background search: $value';
                   });
                 },
-                helpText: "Search without background circle...",
+                helpText: "جستجو بدون دایره پس‌زمینه...",
                 autoFocus: false,
                 color: Colors.grey[200],
                 textFieldColor: Colors.grey[100],
                 // Hide the background circle completely
                 hidePrefixIconBackground: true,
+                // Using default theme cursor color (Red in this demo)
               ),
             ),
 
@@ -149,6 +156,7 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
               pulseAnimation: true,
               // Custom background color for prefix icon
               prefixIconBackgroundColor: Colors.purple[100],
+              cursorColor: Colors.purple,
             ),
 
             SizedBox(height: 30),
@@ -274,6 +282,7 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
                 searchIconColor: Colors.white,
                 textFieldIconColor: Colors.white,
                 style: TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
               ),
             ),
 
@@ -327,21 +336,22 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
 
   Widget _buildFeaturesList() {
     final features = [
-      '� Classic: Smooth icon rotation animations',
+      '🎯 Classic: Smooth icon rotation animations',
       '✨ Enhanced: Gradient background colors',
       '💫 Enhanced: Glow effect around search bar',
       '🔄 Enhanced: Pulse animation on focus',
       '🌈 Enhanced: Customizable gradient borders',
-      '� Enhanced: Fade animation effects',
-      '📱 Both: RTL support',
+      '🎨 Enhanced: Fade animation effects',
+      '📱 Both: Full RTL support (Icons and Text)',
       '⚡ Both: Auto-focus capability',
-      '� Both: Custom icons support',
-      '🔧 Both: Highly customizable',
+      '🔍 Both: Custom icons support',
+      '🔧 Both: Highly customizable colors & durations',
       '🚀 Both: Smooth expand/collapse animations',
       '🎵 Both: Beautiful ripple effects',
-      '🎨 Both: Customizable prefix icon background',
+      '🌈 Both: Customizable prefix icon background',
       '👻 Both: Option to hide prefix icon background',
-      '📍 Both: Perfectly centered icons',
+      '📍 Both: Perfectly centered icons in all modes',
+      '🖍️ Both: Customizable Cursor Color (defaults to Theme)',
     ];
 
     return Container(
@@ -351,7 +361,7 @@ class _SearchBarDemoState extends State<SearchBarDemo> {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: Offset(0, 2),

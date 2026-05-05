@@ -11,13 +11,6 @@ class EnhancedAnimSearchBar extends StatefulWidget {
   /// - textController: TextEditingController - Controller for the text field
   /// - onSuffixTap: Function - Callback when suffix icon is tapped
   /// - onSubmitted: Function(String) - Callback when search is submitted
-  ///
-  /// Optional parameters with enhanced features:
-  /// - gradientColors: List<Color> - Colors for gradient background
-  /// - fadeAnimation: bool - Enable fade animation effects
-  /// - glowEffect: bool - Enable glow effect around the search bar
-  /// - borderGradient: bool - Enable gradient border
-  /// - pulseAnimation: bool - Enable pulse animation on focus
 
   final double width;
   final TextEditingController textController;
@@ -49,6 +42,7 @@ class EnhancedAnimSearchBar extends StatefulWidget {
   final double pulseScale;
   final Color? prefixIconBackgroundColor;
   final bool hidePrefixIconBackground;
+  final Color? cursorColor;
 
   const EnhancedAnimSearchBar({
     super.key,
@@ -85,6 +79,7 @@ class EnhancedAnimSearchBar extends StatefulWidget {
     this.pulseScale = 1.1,
     this.prefixIconBackgroundColor,
     this.hidePrefixIconBackground = false,
+    this.cursorColor,
   });
 
   @override
@@ -115,7 +110,6 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
   }
 
   void _initializeAnimations() {
-    // Main expand/collapse animation
     _expandController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationDurationInMilli),
@@ -125,7 +119,6 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
       curve: Curves.easeInOut,
     );
 
-    // Fade animation for enhanced effects
     _fadeController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -135,7 +128,6 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
       curve: Curves.easeInOut,
     );
 
-    // Pulse animation for focus effect
     _pulseController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
@@ -144,7 +136,6 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // Rotation animation for suffix icon
     _rotationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationDurationInMilli),
@@ -196,7 +187,7 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
       } else {
         _isExpanded = false;
         _expandController.reverse();
-        if (widget.fadeAnimation) _expandController.reverse();
+        if (widget.fadeAnimation) _fadeController.reverse();
         if (widget.autoFocus) _unfocusKeyboard();
       }
     });
@@ -407,7 +398,7 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
               if (widget.fadeAnimation) _fadeController.reverse();
             },
             style: widget.style ?? TextStyle(color: Colors.black),
-            cursorColor: Colors.black,
+            cursorColor: widget.cursorColor ?? Theme.of(context).textSelectionTheme.cursorColor ?? Theme.of(context).primaryColor,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(bottom: 5),
               isDense: true,
@@ -431,7 +422,6 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
   }
 
   Widget _buildPrefixIcon() {
-    // Determine background color
     Color backgroundColor;
     if (widget.hidePrefixIconBackground) {
       backgroundColor = Colors.transparent;
@@ -441,45 +431,49 @@ class _EnhancedAnimSearchBarState extends State<EnhancedAnimSearchBar>
       backgroundColor = _isExpanded ? widget.textFieldColor! : widget.color!;
     }
 
-    return Material(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(30.0),
-      child: Container(
-        width: 48.0,
-        height: 48.0,
-        decoration:
-            widget.borderGradient &&
-                !_isExpanded &&
-                !widget.hidePrefixIconBackground
-            ? BoxDecoration(
-                gradient: LinearGradient(
-                  colors: widget.gradientColors,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(30.0),
-              )
-            : null,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(30.0),
-          onTap: _toggleSearchBar,
-          child: Container(
-            alignment: Alignment.center, // Center the icon properly
-            child: widget.prefixIcon != null
-                ? _isExpanded
-                      ? Icon(
-                          Icons.arrow_back_ios,
-                          color: widget.textFieldIconColor,
-                          size: 20.0,
-                        )
-                      : widget.prefixIcon!
-                : Icon(
-                    _isExpanded ? Icons.arrow_back_ios : Icons.search,
-                    color: _isExpanded
-                        ? widget.textFieldIconColor
-                        : widget.searchIconColor,
-                    size: 20.0,
+    return Positioned(
+      left: widget.rtl ? null : 0,
+      right: widget.rtl ? 0 : null,
+      child: Material(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(30.0),
+        child: Container(
+          width: 48.0,
+          height: 48.0,
+          decoration:
+              widget.borderGradient &&
+                  !_isExpanded &&
+                  !widget.hidePrefixIconBackground
+              ? BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: widget.gradientColors,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  borderRadius: BorderRadius.circular(30.0),
+                )
+              : null,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30.0),
+            onTap: _toggleSearchBar,
+            child: Container(
+              alignment: Alignment.center,
+              child: widget.prefixIcon != null
+                  ? _isExpanded
+                        ? Icon(
+                            Icons.arrow_back_ios,
+                            color: widget.textFieldIconColor,
+                            size: 20.0,
+                          )
+                        : widget.prefixIcon!
+                  : Icon(
+                      _isExpanded ? Icons.arrow_back_ios : Icons.search,
+                      color: _isExpanded
+                          ? widget.textFieldIconColor
+                          : widget.searchIconColor,
+                      size: 20.0,
+                    ),
+            ),
           ),
         ),
       ),
